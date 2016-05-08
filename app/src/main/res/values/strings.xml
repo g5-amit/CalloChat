@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Callo</string>
+    <string name="label_search">Search</string>
+    <string name="label_multiple_numbers">Multiple numbers</string>
+    <string name="title_contact">Contacts</string>
+    <string name="title_group">Groups</string>
+    <string name="title_conversation">Conversations</string>
+</resources>
