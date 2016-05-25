@@ -7,18 +7,24 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.callo.R;
 import com.callo.models.User;
 import com.callo.network.NetworkCallback;
 import com.callo.network.NetworkRequest;
 import com.callo.utils.UrlEndpoints;
+import com.callo.utils.Util;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -43,8 +49,63 @@ public class RegisterFragment extends Fragment implements LoaderManager.LoaderCa
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
         View v = layoutInflater.inflate(R.layout.layout_signup, container,false);
         mEditEmail = (EditText) v.findViewById(R.id.edit_email);
+        mEditEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!Util.isValidEmail(mEditEmail.getText().toString())){
+                    mEditEmail.setError("wrong email entered");
+                }
+            }
+        });
+
         mEditPhone = (EditText) v.findViewById(R.id.edit_mobile);
+        mEditPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!Util.isValidPhoneNumber(mEditPhone.getText().toString())){
+                    mEditPhone.setError("wrong phone entered");
+                }
+            }
+        });
         mEditName = (EditText) v.findViewById(R.id.edit_name);
+        mEditName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(!Util.isValidName(mEditName.getText().toString())){
+                    mEditName.setError("wrong phone entered");
+                }
+            }
+        });
         mButtonSignup = (Button) v.findViewById(R.id.btn_signup);
         mButtonSignup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,9 +132,27 @@ public class RegisterFragment extends Fragment implements LoaderManager.LoaderCa
 
 
     public void submit() {
+
+        boolean userDetail = Util.isEditTextEmpty(mEditEmail, mEditPhone, mEditName);
+        if(userDetail){
+            Toast.makeText(RegisterFragment.this.getActivity(), "enter ALL detail first", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(!Util.isValidPhoneNumber(mEditPhone.getText().toString())){
+            Toast.makeText(RegisterFragment.this.getActivity(), "enter valid phone number first", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(!Util.isValidName(mEditName.getText().toString())){
+            Toast.makeText(RegisterFragment.this.getActivity(), "enter valid name first", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(!Util.isValidEmail(mEditEmail.getText().toString())){
+            Toast.makeText(RegisterFragment.this.getActivity(), "enter valid email first", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         User user = new User();
         User.UserData userData = new User.UserData();
-        userData.setEmail(mEditEmail.getText().toString());
         userData.setDeviceId("132547698");
         userData.setMobile(mEditPhone.getText().toString());
         userData.setName(mEditName.getText().toString());
